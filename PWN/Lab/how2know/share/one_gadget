@@ -1,0 +1,7 @@
+Gadgets information
+============================================================
+0x00000000000013e1 : leave ; ret
+0x0000000000001273 : pop rbp ; ret
+0x000000000000101a : ret
+
+Unique gadgets found: 3
