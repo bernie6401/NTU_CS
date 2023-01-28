@@ -11,7 +11,7 @@ int main()
     char *buf;
 
     buf = malloc(0x10);
-    fp = fopen("/tmp/meow", "w");
+    fp = fopen("./test", "w");
     read(0, buf, 0x1000);
     fwrite(buf, 0x10, 1, fp);
     return 0;
