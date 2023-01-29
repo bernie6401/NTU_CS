@@ -13,7 +13,7 @@ int main()
     char *buf;
 
     buf = malloc(0x10);
-    fp = fopen("/tmp/meow", "r");
+    fp = fopen("./test", "r");
     read(0, buf, 0x1000);
     fread(buf, 0x10, 1, fp);
 

@@ -19,7 +19,7 @@ int main()
 {
     FILE *fp;
 
-    fp = fopen("/tmp/meow", "r");
+    fp = fopen("./test", "r");
     aaw(fp, leak, sizeof(leak));
     fclose(fp);
 
