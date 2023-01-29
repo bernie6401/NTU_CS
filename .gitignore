@@ -1,3 +1,5 @@
 PWN/pwndbg/
 PWN/*.pdf
 PWN//Demo/leak_canary/.vscode/
+
+Web/*.pdf
