@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Note</title>
+        <meta http-equiv="Content-Security-Policy" content="script-src 'nonce-<%= nonce %>' https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.4.1/purify.min.js">
+        <link rel="stylesheet" href="https://cdn.simplecss.org/simple.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.4.1/purify.min.js"></script>
+    </head>
+    <body>
+        <main>
+            <h1>TODO List</h1>
+            <hr>
+            <article id="container">
+            </article>
+            <input type="text" id="inputNode" style="width: 100%">
+            <input type="hidden" id="csrfToken" value="<%= csrfToken %>">
+            <button id="logout">Logout</button>
+            <button id="report">Report</button>
+        </main>
+        <script nonce="<%= nonce %>">
+          var todoList = [];
+          async function updateTodoList(){
+            todoList = await fetch('/api/todo').then(r=>r.json());
+            render();
+          }
+          function saveTodoList(e){
+            let id = e.target.id;
+            todoList[id].checked = 1;
+            fetch('/api/todo', {method: 'POST', body: JSON.stringify({todo: todoList, csrfToken: csrfToken.value})});
+          }
+          function render(){
+            container.innerHTML = '';
+            for(let i = 0; i < todoList.length; i++){
+              let item = todoList[i];
+              let tmpNode = document.createElement("label");
+              tmpNode.innerHTML = `<input type="checkbox">&nbsp;<code></code>`;
+              tmpNode.firstChild.checked = item.checked;
+              tmpNode.firstChild.id = i;
+              tmpNode.firstChild.onchange = saveTodoList; 
+              tmpNode.lastChild.innerHTML = DOMPurify.sanitize(item.text);
+              container.appendChild(tmpNode);
+            }
+          }
+          inputNode.onkeypress = function(e){
+            if (e.key === 'Enter') {
+              todoList.push({checked: 0, text: inputNode.value});
+              fetch('/api/todo', {method: 'POST', body: JSON.stringify({todo: todoList, csrfToken: csrfToken.value})}).then(()=>render());
+              inputNode.value = '';
+            }
+          };
+          logout.onclick = ()=>{ location = '/api/logout'; };
+          report.onclick = function(e){
+            let url = prompt("URL:");
+            fetch('/api/report', {
+              method: 'POST',
+              body: JSON.stringify({
+                url,
+                csrfToken: csrfToken.value
+              })
+            }).then(r=>r.text()).then(t=>alert(t));
+            
+          }
+          window.onload = updateTodoList;
+          setInterval(updateTodoList, 500);
+        </script>
+    </body>
+</html>

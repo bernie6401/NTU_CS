@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Simple Note</title>
+        <meta http-equiv="Content-Security-Policy" content="script-src 'nonce-<%= nonce %>' https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.4.1/purify.min.js">
+        <link rel="stylesheet" href="https://cdn.simplecss.org/simple.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.4.1/purify.min.js"></script>
+        <style>
+        </style>
+    </head>
+    <body>
+        <main>
+            <h1>Todo List</h1>
+            <hr>
+            <article>
+                <kbd id="kbdLogin">Login</kbd>
+                <kbd id="kbdRegister">Register</kbd>
+                <p>
+                    <label>Username</label>
+                    <input type="text" id="username" maxlength="40">
+                </p>
+                <p>
+                    <label>Password</label>
+                    <input type="password" id="password" maxlength="40">
+                </p>
+                <button id="btn">Login</button>
+            </article>
+        </main>
+        <script nonce="<%= nonce %>">
+          var action = "Login";
+          var switchAction = function(e){
+            action = e.target.innerText;
+            btn.innerText = action;
+          }
+          kbdLogin.onclick = kbdRegister.onclick = switchAction;
+          btn.onclick = function(e){
+            fetch(`/api/${action.toLowerCase()}`,{
+              method: "POST",
+              body: JSON.stringify({username:username.value, password:password.value})
+            }).then(r => r.json()).then(e => {
+              if (e.error) alert(e.error);
+              if (e.success) location = '/todo';
+            })
+          }
+        </script>
+    </body>
+</html>
