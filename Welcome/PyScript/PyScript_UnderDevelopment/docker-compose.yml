@@ -1,0 +1,31 @@
+version: '3.9'
+
+services:
+  apache:
+    build: apache
+    volumes:
+      - ./apache/proxy-php.conf:/usr/local/apache2/conf/extra/proxy-php.conf:ro
+    networks:
+      - internal
+      - external
+    ports:
+      - 8000:80
+  php:
+    build: php
+    volumes:
+      - ./php/index.php:/var/www/html/index.php:ro
+      - ./flag1:/flag:ro
+    networks:
+      - internal
+  flask:
+    build: flask
+    volumes:
+      - ./flask/app.py:/app/app.py:ro
+      - ./flag2:/flag:ro
+    networks:
+      - internal
+
+networks:
+  internal:
+    internal: true
+  external:

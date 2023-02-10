@@ -1,0 +1,22 @@
+version: '3.7'
+services:
+  bot:
+    build:
+      context: ./bot
+    restart: always
+    environment:
+      - PORT=8080
+      - SITE=https://todo.ctf.zoolab.org/ # Admin will login to https://todo.ctf.zoolab.org, but for local test, you should set this to something like https://localhost:443
+      - REPORT_HOST=web
+      - ADMIN_PASSWORD=dummypassword
+  web:
+    build:
+      context: ./web
+    environment:
+      - BOT_HOST=bot
+      - BOT_PORT=8080
+      - FLAG=FLAG{dummyflag}
+      - ADMIN_PASSWORD=dummypassword
+    restart: always
+    ports:
+      - "18443:443"
