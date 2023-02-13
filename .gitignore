@@ -8,4 +8,7 @@ PWN/*.pdf
 PWN//Demo/leak_canary/.vscode/
 
 Web/*.pdf
+
+Reverse/*.pdf
+Crypto/*.pdf
 >>>>>>> fb6389a99dc4be1597b4874cf61b92aba9781240
