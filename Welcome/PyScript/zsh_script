@@ -1,5 +1,13 @@
-#! /usr/bin/env python
-print("This is Python code")
+a = 1 // 1 ; b = '''
 
-#!/usr/bin/env node
-# console.log("This is Node.js code");
+// Put your Javascript code here.
+// Python will just assign it to a string variable
+console.log('Javascript running here');
+
+/* '''
+
+# Put your Python code here. Javascript will ignore it
+# because it's inside a comment
+print('Python running here')
+
+# */
