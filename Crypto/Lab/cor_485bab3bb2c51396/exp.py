@@ -67,37 +67,52 @@ def guess_state(state_size_pow, tap, cipher_text):
             print(guess_state)
             result.append(guess_state)
 
-        tmp = decimalToBinary(state + 1)
+        tmp = decimalToBinary(state + 1 + 3187671)
         guess_state = [0 for i in range(state_size_pow - len(tmp))] + [int(tmp[i]) for i in range(len(tmp))]
 
     return result
 
-def final_test(state_size, tap, cipher_text, b_guess_state, c_guess_state):
-    guess_state = [0 for _ in range(state_size)]  # Initial guess state
-    lfsr = LFSR(tap, guess_state)
+def final_guess(state_size_pow, tap, cipher_text, b_guess_state, c_guess_state):
+    guess_state = [0 for _ in range(state_size_pow)]  # Initial guess state
 
-    guess_text = []
-    for state in trange(2**state_size):
-        lfsr = LFSR(tap, guess_state)
+    for state in trange(2**state_size_pow):
+        guess_text = []
+        lfsr1 = LFSR(tap[0], guess_state)
+        lfsr2 = LFSR(tap[1], b_guess_state)
+        lfsr3 = LFSR(tap[2], c_guess_state)
+        cipher = triLFSR(lfsr1, lfsr2, lfsr3)
 
         for _ in range(200):
-            guess_text.append(lfsr.getbit())
+            guess_text.append(cipher.getbit())
             
         acc = cal_correlation(guess_text, cipher_text)
         if acc == 1:
             print(guess_state)
-            break
+            return guess_state
 
         tmp = decimalToBinary(state + 1)
-        guess_state = [0 for i in range(23 - len(tmp))] + [int(tmp[i]) for i in range(len(tmp))]
+        guess_state = [0 for i in range(state_size_pow - len(tmp))] + [int(tmp[i]) for i in range(len(tmp))]
 
 
 if __name__ == '__main__':
     cipher_flag, cipher_text = initialize()
 
     tap = [[0, 13, 16, 26], [0, 5, 7, 22], [0, 17, 19, 24]]
-    # B_guess_state = guess_state(23, tap[1], cipher_text)
+    B_guess_state = guess_state(23, tap[1], cipher_text)    # [0, 1, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0, 0, 0]
     C_guess_state = guess_state(25, tap[2], cipher_text)
 
 
-    # final_test(tap)
+    A_guess_state = final_guess(27, tap, cipher_text, B_guess_state, C_guess_state)
+
+    lfsr1 = LFSR(tap[0], A_guess_state)
+    lfsr2 = LFSR(tap[1], B_guess_state)
+    lfsr3 = LFSR(tap[2], C_guess_state)
+    cipher = triLFSR(lfsr1, lfsr2, lfsr3)
+
+    output = []
+
+    for b in cipher_flag:
+        # print(b)
+        output.append(cipher.getbit() ^ b)
+    
+    print(output)
