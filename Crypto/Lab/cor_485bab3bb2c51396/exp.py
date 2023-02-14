@@ -55,8 +55,8 @@ def guess_state(state_size_pow, tap, cipher_text):
     guess_state = [0 for _ in range(state_size_pow)]  # Initial guess state
     result = []
 
-    guess_text = []
     for state in trange(2**state_size_pow):
+        guess_text = []
         lfsr = LFSR(tap, guess_state)
 
         for _ in range(200):
@@ -68,7 +68,7 @@ def guess_state(state_size_pow, tap, cipher_text):
             result.append(guess_state)
 
         tmp = decimalToBinary(state + 1)
-        guess_state = [0 for i in range(23 - len(tmp))] + [int(tmp[i]) for i in range(len(tmp))]
+        guess_state = [0 for i in range(state_size_pow - len(tmp))] + [int(tmp[i]) for i in range(len(tmp))]
 
     return result
 
@@ -96,7 +96,7 @@ if __name__ == '__main__':
     cipher_flag, cipher_text = initialize()
 
     tap = [[0, 13, 16, 26], [0, 5, 7, 22], [0, 17, 19, 24]]
-    B_guess_state = guess_state(23, tap[1], cipher_text)
+    # B_guess_state = guess_state(23, tap[1], cipher_text)
     C_guess_state = guess_state(25, tap[2], cipher_text)
 
 
