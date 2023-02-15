@@ -63,7 +63,7 @@ def guess_state(state_size_pow, tap, cipher_text):
             guess_text.append(lfsr.getbit())
             
         acc = cal_correlation(guess_text, cipher_text)
-        if acc >= 0.75:
+        if acc >= 0.70:
             print(guess_state)
             result.append(guess_state)
 
@@ -98,8 +98,10 @@ if __name__ == '__main__':
     cipher_flag, cipher_text = initialize()
 
     tap = [[0, 13, 16, 26], [0, 5, 7, 22], [0, 17, 19, 24]]
-    B_guess_state = guess_state(23, tap[1], cipher_text)    # [0, 1, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0, 0, 0]
-    C_guess_state = guess_state(25, tap[2], cipher_text)
+    # B_guess_state = guess_state(23, tap[1], cipher_text)    # [0, 1, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0, 0, 0]
+    # C_guess_state = guess_state(25, tap[2], cipher_text)  # [1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1]
+    B_guess_state = [0, 1, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0, 0, 0]
+    C_guess_state = [1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1]
 
 
     A_guess_state = final_guess(27, tap, cipher_text, B_guess_state, C_guess_state)
