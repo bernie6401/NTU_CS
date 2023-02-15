@@ -102,9 +102,10 @@ if __name__ == '__main__':
     # C_guess_state = guess_state(25, tap[2], cipher_text)  # [1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1]
     B_guess_state = [0, 1, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0, 0, 0]
     C_guess_state = [1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1]
+    A_guess_state = [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 1, 0, 1, 1]
 
 
-    A_guess_state = final_guess(27, tap, cipher_text, B_guess_state, C_guess_state)
+    # A_guess_state = final_guess(27, tap, cipher_text, B_guess_state, C_guess_state)
 
     lfsr1 = LFSR(tap[0], A_guess_state)
     lfsr2 = LFSR(tap[1], B_guess_state)
