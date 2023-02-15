@@ -1,13 +1,17 @@
 a = 1 // 1 ; b = '''
 
-// Put your Javascript code here.
-// Python will just assign it to a string variable
-console.log('Javascript running here');
+const fs = require('fs');
+
+fs.readFile("./flag", 'utf8',(error, data) => {
+    if (error) {
+        console.error(error);
+        return;
+    }
+    console.log(data.split('\n')[0]);
+})
 
 /* '''
 
-# Put your Python code here. Javascript will ignore it
-# because it's inside a comment
-print('Python running here')
-
+f = open("flag", "r")
+print(f.read().split('\n')[0])
 # */

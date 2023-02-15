@@ -1,0 +1,10 @@
+a = 1 // 1 ; b = '''
+
+console.log('javascript code here');
+
+
+/*'''
+
+print('python code')
+
+#*/
