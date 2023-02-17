@@ -112,10 +112,16 @@ if __name__ == '__main__':
     lfsr3 = LFSR(tap[2], C_guess_state)
     cipher = triLFSR(lfsr1, lfsr2, lfsr3)
 
+    # guess_text = []
+    # for _ in range(200):
+    #     guess_text.append(cipher.getbit())
+    # acc = cal_correlation(guess_text, cipher_text)
+
     output = []
 
     for b in cipher_flag:
-        # print(b)
         output.append(cipher.getbit() ^ b)
+        # print(output[-1])
+        print(b, output[-1])
     
-    print(output)
+    # print(output)
