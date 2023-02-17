@@ -1,5 +1,6 @@
 import random
 from tqdm import trange
+import base64
 
 def initialize():
     # Import output file(our cipher flag)
@@ -15,7 +16,7 @@ def initialize():
             cipher_flag.append(int(f[i]))
         else:
             cipher_text.append(int(f[i]))
-    print(cipher_flag, cipher_text)
+    # print(cipher_flag, cipher_text)
     return cipher_flag, cipher_text
 
 def cal_correlation(a, b):
@@ -67,7 +68,7 @@ def guess_state(state_size_pow, tap, cipher_text):
             
         acc = cal_correlation(guess_text, cipher_text)
         if acc >= 0.70:
-            print(guess_state)
+            # print(guess_state)
             result.append(guess_state)
 
         tmp = decimalToBinary(state + 1 + 3187671)
@@ -99,40 +100,88 @@ def final_guess(state_size_pow, tap, cipher_text, b_guess_state, c_guess_state):
         tmp = decimalToBinary(state + 1 + 13421773 * 8)
         guess_state = [0 for i in range(state_size_pow - len(tmp))] + [int(tmp[i]) for i in range(len(tmp))]
 
+def binToHexa(n):
+    bnum = int(n)
+    temp = 0
+    mul = 1
+     
+    # counter to check group of 4
+    count = 1
+     
+    # char array to store hexadecimal number
+    hexaDeciNum = ['0'] * 100
+     
+    # counter for hexadecimal number array
+    i = 0
+    while bnum != 0:
+        rem = bnum % 10
+        temp = temp + (rem*mul)
+         
+        # check if group of 4 completed
+        if count % 4 == 0:
+           
+            # check if temp < 10
+            if temp < 10:
+                hexaDeciNum[i] = chr(temp+48)
+            else:
+                hexaDeciNum[i] = chr(temp+55)
+            mul = 1
+            temp = 0
+            count = 1
+            i = i+1
+             
+        # group of 4 is not completed
+        else:
+            mul = mul*2
+            count = count+1
+        bnum = int(bnum/10)
+         
+    # check if at end the group of 4 is not
+    # completed
+    if count != 1:
+        hexaDeciNum[i] = chr(temp+48)
+         
+    # check at end the group of 4 is completed
+    if count == 1:
+        i = i-1
+         
+    # printing hexadecimal number
+    # array in reverse order
+    # print("\n Hexadecimal equivalent of {}:  ".format(n), end="")
+    hex_string = ''
+    while i >= 0:
+        # print(end=hexaDeciNum[i])
+        # print(hexaDeciNum[i])
+        hex_string += hexaDeciNum[i]
+        # print(base64.b64decode(hexaDeciNum[i]))
+        i = i-1
+    return hex_string
 
 if __name__ == '__main__':
     cipher_flag, cipher_text = initialize()
 
     tap = [[0, 13, 16, 26], [0, 5, 7, 22], [0, 17, 19, 24]]
-    # B_guess_state = guess_state(23, tap[1], cipher_text)    # [1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0]
-    # [0, 1, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0, 0, 0]
-    
-    # C_guess_state = guess_state(25, tap[2], cipher_text)  # [0, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 0]
-    # [1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1]
-    
-    B_guess_state = [1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0]
-    C_guess_state = [0, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 0]
-    # A_guess_state = [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 1, 0, 1, 1]
-    A_guess_state = [1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0]
+    B_guess_state = guess_state(23, tap[1], cipher_text)    # [1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0]
+    C_guess_state = guess_state(25, tap[2], cipher_text)  # [0, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 0]
+    A_guess_state = final_guess(27, tap, cipher_text, B_guess_state[0], C_guess_state[0]) # [1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0]
+    # B_guess_state = [1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0]
+    # C_guess_state = [0, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 0]
+    # A_guess_state = [1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0]
 
-
-    # A_guess_state = final_guess(27, tap, cipher_text, B_guess_state, C_guess_state)
 
     lfsr1 = LFSR(tap[0], A_guess_state)
     lfsr2 = LFSR(tap[1], B_guess_state)
     lfsr3 = LFSR(tap[2], C_guess_state)
     cipher = triLFSR(lfsr1, lfsr2, lfsr3)
 
-    # guess_text = []
-    # for _ in range(200):
-    #     guess_text.append(cipher.getbit())
-    # acc = cal_correlation(guess_text, cipher_text)
-
     output = []
+    plaintext_bin = ''
+    plaintext_hex = ''
 
-    for b in cipher_flag:
-        output.append(cipher.getbit() ^ b)
-        # print(output[-1])
-        print(b, output[-1])
-    
-    # print(output)
+    for i, b in enumerate(cipher_flag):
+        plaintext_bin += str(cipher.getbit() ^ b)
+
+        if (i+1) % 8 == 0:
+            plaintext_hex += binToHexa(plaintext_bin)
+            plaintext_bin = ''
+    print(bytes.fromhex(plaintext_hex).decode())
