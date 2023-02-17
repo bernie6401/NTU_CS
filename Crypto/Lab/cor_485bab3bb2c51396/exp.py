@@ -59,6 +59,9 @@ def guess_state(state_size_pow, tap, cipher_text):
         guess_text = []
         lfsr = LFSR(tap, guess_state)
 
+        for _ in range(232):
+            lfsr.getbit()
+
         for _ in range(200):
             guess_text.append(lfsr.getbit())
             
@@ -82,6 +85,9 @@ def final_guess(state_size_pow, tap, cipher_text, b_guess_state, c_guess_state):
         lfsr3 = LFSR(tap[2], c_guess_state)
         cipher = triLFSR(lfsr1, lfsr2, lfsr3)
 
+        for _ in range(232):
+            cipher.getbit()
+
         for _ in range(200):
             guess_text.append(cipher.getbit())
             
@@ -90,7 +96,7 @@ def final_guess(state_size_pow, tap, cipher_text, b_guess_state, c_guess_state):
             print(guess_state)
             return guess_state
 
-        tmp = decimalToBinary(state + 1)
+        tmp = decimalToBinary(state + 1 + 13421773 * 8)
         guess_state = [0 for i in range(state_size_pow - len(tmp))] + [int(tmp[i]) for i in range(len(tmp))]
 
 
@@ -98,11 +104,16 @@ if __name__ == '__main__':
     cipher_flag, cipher_text = initialize()
 
     tap = [[0, 13, 16, 26], [0, 5, 7, 22], [0, 17, 19, 24]]
-    # B_guess_state = guess_state(23, tap[1], cipher_text)    # [0, 1, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0, 0, 0]
-    # C_guess_state = guess_state(25, tap[2], cipher_text)  # [1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1]
-    B_guess_state = [0, 1, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0, 0, 0]
-    C_guess_state = [1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1]
-    A_guess_state = [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 1, 0, 1, 1]
+    # B_guess_state = guess_state(23, tap[1], cipher_text)    # [1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0]
+    # [0, 1, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0, 0, 0]
+    
+    # C_guess_state = guess_state(25, tap[2], cipher_text)  # [0, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 0]
+    # [1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1]
+    
+    B_guess_state = [1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0]
+    C_guess_state = [0, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 0]
+    # A_guess_state = [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 1, 0, 1, 1]
+    A_guess_state = [1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0]
 
 
     # A_guess_state = final_guess(27, tap, cipher_text, B_guess_state, C_guess_state)
