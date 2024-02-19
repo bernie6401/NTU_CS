@@ -8,32 +8,39 @@ Linear Congruential Generator:
 ## Analysis
 LCG Formula
 $$
-Unknown:\\
-S_0=Seed,\  A,\  B,\  m = 2^{32} \\
-Given: S_1,\  S_2,\  S_3\\
-S_1 \equiv (AS_0\ +\ B)\ \%\ m\\
-S_2 \equiv (AS_1\ +\ B)\ \%\ m\\
-S_3 \equiv (AS_2\ +\ B)\ \%\ m
+\begin{aligned}
+Unknown: S_0&=Seed,\  A,\  B,\  m = 2^{32} \\
+Given: S_1&,\  S_2,\  S_3\\
+S_1 &\equiv (AS_0\ +\ B)\ \%\ m\\
+S_2 &\equiv (AS_1\ +\ B)\ \%\ m\\
+S_3 &\equiv (AS_2\ +\ B)\ \%\ m\\
+\end{aligned}
 $$
+
 Derived A
 $$
-\left\{ 
+\begin{aligned}
+&\left\{ 
   \begin{array}{c}
-    S_2 \equiv (AS_1\ +\ B)\ \%\ m\\
-    S_3 \equiv (AS_2\ +\ B)\ \%\ m
+    S_2 &\equiv (AS_1\ +\ B)\ \%\ m\\
+    S_3 &\equiv (AS_2\ +\ B)\ \%\ m
   \end{array}
 \right.
-\\minus \ two \ formula\ \\
-\to (S_2-S_3) \equiv (AS_1\ +\ B)\ \%\ m-(AS_2\ +\ B)\ \%\ m \\
-\to (S_2-S_3)\ \% \ m\equiv [(AS_1\ +\ B)\ \%\ m-(AS_2\ +\ B)\ \%\ m]\ \%\ m \\
-\to (S_2-S_3)\ \% \ m\equiv [(AS_1\ +\ B)-(AS_2\ +\ B)]\ \%\ m \\
-\to (S_2-S_3)\ \% \ m\equiv \ A\ (S_1-S_2)\ \ \%\ m =(S_2-S_3)\\
-A=((S_2-S_3)(S_1-S_2)^{-1})\ \%\ m
+\ \ \ \ \ \ minus \ two \ formula\ \\
+&\to (S_2-S_3) \equiv (AS_1\ +\ B)\ \%\ m-(AS_2\ +\ B)\ \%\ m \\
+&\to (S_2-S_3)\ \% \ m\equiv [(AS_1\ +\ B)\ \%\ m-(AS_2\ +\ B)\ \%\ m]\ \%\ m \\
+&\to (S_2-S_3)\ \% \ m\equiv [(AS_1\ +\ B)-(AS_2\ +\ B)]\ \%\ m \\
+&\to (S_2-S_3)\ \% \ m\equiv \ A\ (S_1-S_2)\ \ \%\ m =(S_2-S_3)\\
+A&=((S_2-S_3)(S_1-S_2)^{-1})\ \%\ m
+\end{aligned}
 $$
+
 Note
 $$
-a\ \%\ m=\ b \\
-a\ \%\ m=\ b \ \%\ m= \ b\\
+\begin{aligned}
+a\ \%\ m&=\ b \\
+a\ \%\ m&=\ b \ \%\ m= \ b\\
+\end{aligned}
 $$
 
 Derive B
